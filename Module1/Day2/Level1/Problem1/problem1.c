@@ -11,8 +11,18 @@ Topics to be covered
 */
 
 #include <stdio.h>
+void printExponent(double num);
+int main() 
+{
+    double x = 0.7;
+    printf("Input: %f\n", x);
+    printExponent(x);
 
-void printExponent(double num) {
+    return 0;
+}
+
+void printExponent(double num) 
+{
     unsigned long long *ptr = (unsigned long long *)&num;
     unsigned long long exponent = (*ptr >> 52) & 0x7FF;
 
@@ -25,10 +35,4 @@ void printExponent(double num) {
     printf("\n");
 }
 
-int main() {
-    double x = 0.7;
-    printf("Input: %f\n", x);
-    printExponent(x);
 
-    return 0;
-}
