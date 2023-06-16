@@ -13,24 +13,34 @@ Concepts to be used.
 */
 
 #include<stdio.h>
-int BinaryToDecimal(unsigned int b_value);
+#define DECTOBCD(decimal_value) ((decimal_value/100<<8) | (decimal_value/10<<4) | (decimal_value%10))
+void D2B(unsigned int n);
 int main()
 {
-    unsigned int b_value;
-    printf("Enter the Binary Value : ");
-    scanf("%u",&b_value);
+    unsigned int decimal_value;
+    printf("Enter the Decimal value : ");
+    scanf("%u",&decimal_value);
+    unsigned int result = DECTOBCD(decimal_value);
+    printf("Decimal to BCD format : %u\n",result);
+    D2B(result);
 
-    int result = BinaryToDecimal(b_value);
 
-
-
-    return 0;
 }
 
-int BinaryToDecimal(unsigned int b_value)
+void D2B(unsigned int n)
 {
-    int pow = 2;
-    int sum = 0;
-
-    for(int i=0;i)
+    char binary[16]={0};
+    int i=0;
+    while(n!=0)
+    {
+        int rem = n%2;
+        binary[i++]=rem;
+        n=n/2;
+    }
+    printf("The Decimal to BCD in Binary: ");
+    for (int j = 15; j >= 0; j--) {
+        printf("%d", binary[j]);
+    }
+    printf("\n");
+    
 }
