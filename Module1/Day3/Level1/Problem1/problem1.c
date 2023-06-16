@@ -14,6 +14,9 @@ Concepts to be used.
 */
 
 #include<stdio.h>
+void fun1(int n,int i);
+void fun2(int i);
+void fun3(int n1,int i);
 int main()
 {
     int n,s,n1;
@@ -26,17 +29,31 @@ int main()
 
     for(int i=0;i<n;i++)
     {
-        for(int j=0;j<n-i;j++)
+        fun1(n,i);
+        fun2(i);
+        fun3(n1,i);
+    }
+
+}
+void fun1(int n,int i)
+{
+    for(int j=0;j<n-i;j++)
         {
             printf("%d",j+1);
         }
+}
 
-        for(int j=0;j<i;j++)
-        {
+void fun2(int i)
+{
+    for(int j=0;j<i;j++)
+    {
             printf(" ");
-        }
+    }
+}
 
-        for(int j=0;j<n;j++)
+void fun3(int n1,int i)
+{
+    for(int j=0;j<n1;j++)
         {
             if(j<i)
             {
@@ -48,6 +65,4 @@ int main()
             }
         }
         printf("\n");
-    }
-
 }
