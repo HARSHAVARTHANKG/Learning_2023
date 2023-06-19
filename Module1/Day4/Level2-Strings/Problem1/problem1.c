@@ -15,7 +15,7 @@ int main()
     scanf("%s",date);
 
     int result = Split_Date(date);
-    printf("\nThe no of elapsed day : %d\n",result);
+    printf("\nThe Number of Elapsed Days : %d\n",result);
     return 0;
 }
 
