@@ -1,3 +1,24 @@
+/*
+ Data Viewer:
+Write an application to view the log stored in data.csv
+Example, say you have the following data in data.csv
+
+------------------------------------
+
+EntryNo,sensorNo,Temperature,Humidity,Light,
+
+1,S1,36.5,100,50,10:30:50
+2,S3,30,100,50,10:30:55
+3,S2,-6.6,100,10,10:31:00
+------------------------------------
+
+a. Write a function to extract each line in the .csv file and store it in an array of structures. 
+
+b. Also implement functions to display the contents of the array of structures.
+*/
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,12 +46,12 @@ void extractData(LogEntry entries[], int *numEntries) {
     char *token;
     int entryCount = 0;
 
-    // Read each line in the file
+    
     while (fgets(line, sizeof(line), file) != NULL) {
-        // Tokenize the line based on comma (',')
+    
         token = strtok(line, ",");
         
-        // Extract data and store it in the corresponding structure fields
+       
         entries[entryCount].entryNo = atoi(token);
 
         token = strtok(NULL, ",");
