@@ -1,124 +1,79 @@
-/*
-
-
- Case Handler:
-Write a C program to copy a file by considering the user option to handle the text case
--u, to change file content to Upper Case
--l, to change file content to Lower Case
--s, to change file content to Sentence Case
-if no options are passed then it should be a normal copy
-
-Example, say we have a file f1 with the following content
-f1:
------------------------
-This is the file data
-testing Case copy
-application
------------------------
-
-./cp -s f1 f2
-f2:
------------------------
-This Is The Tile Data
-Testing Case Copy
-Application
------------------------
-
-./cp -l f1 f3
-f3:
------------------------
-this is the tile data
-testing case copy
-application
------------------------
-
-./cp -u f1 f4
-f4:
------------------------
-THIS IS THE FILE DATA
-TESTING CASE COPY
-APPLICATION
------------------------
-
-./cp f1 f5
-Should perform a normal copy
-*/
-
 #include <stdio.h>
-#include <ctype.h>
+#include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
-void convertToUpperCase(char *str) {
-    while (*str) {
-        *str = toupper((unsigned char)*str);
-        str++;
+void convertToUpperCase(FILE* sourceFile, FILE* destinationFile) {
+    int ch;
+    while ((ch = fgetc(sourceFile)) != EOF) {
+        fputc(toupper(ch), destinationFile);
     }
 }
 
-void convertToLowerCase(char *str) {
-    while (*str) {
-        *str = tolower((unsigned char)*str);
-        str++;
+void convertToLowerCase(FILE* sourceFile, FILE* destinationFile) {
+    int ch;
+    while ((ch = fgetc(sourceFile)) != EOF) {
+        fputc(tolower(ch), destinationFile);
     }
 }
 
-void capitalizeFirstLetter(char *str) {
+
+void convertToPureUpperCase(FILE* sourceFile, FILE* destinationFile) {
+    int ch;
     int isFirstChar = 1;
-    while (*str) {
-        if (isFirstChar && isalpha((unsigned char)*str)) {
-            *str = toupper((unsigned char)*str);
+    
+    while ((ch = fgetc(sourceFile)) != EOF) {
+        if (isFirstChar && islower(ch)) {
+            fputc(toupper(ch), destinationFile);
             isFirstChar = 0;
-        } else if (!isalpha((unsigned char)*str)) {
-            isFirstChar = 1;
+        } else {
+            fputc(ch, destinationFile);
+            
+            if (ch == ' ' || ch == '\t' || ch == '\n') {
+                isFirstChar = 1;
+            } else {
+                isFirstChar = 0;
+            }
         }
-        str++;
     }
 }
 
-int main() {
-    FILE *sourceFile, *destinationFile;
-    char sourceFileName[100], destinationFileName[100];
-    char line[1000];
 
-    printf("Enter the option (u/l/s): ");
-    char option;
-    scanf(" %c", &option);
 
-    printf("Enter the name of the source file: ");
-    scanf("%s", sourceFileName);
+void performNormalCopy(FILE* sourceFile, FILE* destinationFile) {
+    int ch;
+    while ((ch = fgetc(sourceFile)) != EOF) {
+        fputc(ch, destinationFile);
+    }
+}
 
-    printf("Enter the name of the destination file: ");
-    scanf("%s", destinationFileName);
-
-    sourceFile = fopen(sourceFileName, "r");
-    if (sourceFile == NULL) {
-        printf("Failed to open the source file.\n");
+int main(int argc, char* argv[]) {
+    if (argc < 3) {
+        printf("Include the source and destination of files.\n");
+        printf("Use : ./a.out  sourcefile destinationfile\n");
         return 1;
     }
 
-    destinationFile = fopen(destinationFileName, "w");
-    if (destinationFile == NULL) {
-        printf("Failed to open the destination file.\n");
-        fclose(sourceFile);
+    char* option = argv[1];
+    char* sourceFileName = argv[2];
+    char* destinationFileName = argv[3];
+
+    FILE* sourceFile = fopen(sourceFileName, "r");
+    FILE* destinationFile = fopen(destinationFileName, "w");
+
+    if (sourceFile == NULL || destinationFile == NULL) {
+        printf("Error file not included\n");
         return 1;
     }
 
-    while (fgets(line, sizeof(line), sourceFile) != NULL) {
-        switch (option) {
-            case 'u':
-                convertToUpperCase(line);
-                break;
-            case 'l':
-                convertToLowerCase(line);
-                break;
-            case 's':
-                capitalizeFirstLetter(line);
-                break;
-            default:
-                break;
-        }
-
-        fputs(line, destinationFile);
+    if (strcmp(option, "-s") == 0) {
+        convertToPureUpperCase(sourceFile, destinationFile);
+    } else if (strcmp(option, "-l") == 0) {
+        convertToLowerCase(sourceFile, destinationFile);
+    } else if (strcmp(option, "-u") == 0) {
+        convertToUpperCase(sourceFile, destinationFile);
+    } else {
+        performNormalCopy(sourceFile, destinationFile);
     }
 
     printf("File copied successfully.\n");
